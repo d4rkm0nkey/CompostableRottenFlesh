@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.lumpy.monkey.compostable.rottenflesh.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "CompostMixin"
+  ],
+  "client": [
+    "CompostMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
