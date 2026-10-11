@@ -15,12 +15,15 @@
   "license": "CC0-1.0",
   "icon": "assets/compostable-rottenflesh/icon.png",
   "environment": "*",
-  "mixins": [
-    "compostable-rottenflesh.mixins.json"
-  ],
+  "entrypoints": {
+    "main": [
+      "me.lumpy.monkey.compostable.rottenflesh.CompostableRottenFlesh"
+    ]
+  },
   "depends": {
     "fabricloader": ">=0.14.21",
     "java": ">=${java_version}",
-    "minecraft": "${minecraft_dependency}"
+    "minecraft": "${minecraft_dependency}",
+    "fabric-api": "*"
   }
 }
