@@ -1,37 +1,26 @@
 {
   "schemaVersion": 1,
   "id": "compostable-rottenflesh",
-  "version": "1.0.0",
-
+  "version": "${version}",
   "name": "Compostable Rotten Flesh",
   "description": "Allows you to put rotten flesh into a composter",
   "authors": [
     "LumpyMonkey"
   ],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/compostable-rottenflesh"
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/compostable-rottenflesh",
+    "sources": "https://github.com/d4rkm0nkey/CompostableRottenFlesh",
+    "issues": "https://github.com/d4rkm0nkey/CompostableRottenFlesh/issues"
   },
-
   "license": "CC0-1.0",
   "icon": "assets/compostable-rottenflesh/icon.png",
-
   "environment": "*",
-  "entrypoints": {
-    "main": [
-
-    ]
-  },
   "mixins": [
     "compostable-rottenflesh.mixins.json"
   ],
-
   "depends": {
-    "fabricloader": ">=0.11.3",
-    "fabric": "*",
-    "minecraft": "1.18.x",
-    "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
+    "fabricloader": ">=0.14.21",
+    "java": ">=${java_version}",
+    "minecraft": "${minecraft_dependency}"
   }
 }

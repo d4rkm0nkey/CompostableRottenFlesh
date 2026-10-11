@@ -1,0 +1,82 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version '1.18.3'
+	id 'me.modmuss50.mod-publish-plugin' version '2.2.1'
+}
+
+version = "${mod_version}+${minecraft_version}"
+group = maven_group
+
+base {
+	archivesName = archives_base_name
+}
+
+loom {
+	mods {
+		"compostable-rottenflesh" {
+			sourceSet sourceSets.main
+		}
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${loader_version}"
+}
+
+processResources {
+	def props = [
+		"version"             : project.version,
+		"minecraft_dependency": minecraft_dependency,
+		"java_version"        : java_version,
+	]
+	inputs.properties(props)
+	filesMatching("fabric.mod.json") {
+		expand props
+	}
+}
+
+java {
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.toVersion(java_version)
+	targetCompatibility = JavaVersion.toVersion(java_version)
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = java_version as int
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${archives_base_name}" }
+	}
+}
+
+// Publishing to CurseForge and Modrinth: ./gradlew publishMods
+// Without CURSEFORGE_TOKEN / MODRINTH_TOKEN set this runs as a dry run.
+def publishVersions = publish_minecraft_versions.split(",").collect { it.trim() }
+
+publishMods {
+	file = jar.archiveFile
+	displayName = "${mod_version} for ${publishVersions.first()}" + (publishVersions.size() > 1 ? "-${publishVersions.last()}" : "")
+	version = project.version
+	changelog = providers.environmentVariable("CHANGELOG").filter { !it.isBlank() }.orElse("See https://github.com/d4rkm0nkey/CompostableRottenFlesh/releases")
+	type = providers.environmentVariable("RELEASE_TYPE").filter { !it.isBlank() }.map { me.modmuss50.mpp.ReleaseType.of(it) }.orElse(STABLE)
+	modLoaders.addAll("fabric", "quilt")
+	dryRun = providers.environmentVariable("CURSEFORGE_TOKEN").getOrElse("").isBlank() \
+		|| providers.environmentVariable("MODRINTH_TOKEN").getOrElse("").isBlank()
+
+	curseforge {
+		projectId = curseforge_id
+		projectSlug = "compostable-rottenflesh"
+		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+		minecraftVersions.addAll(publishVersions)
+		javaVersions.add(JavaVersion.toVersion(java_version))
+		client = true
+		server = true
+	}
+	modrinth {
+		projectId = modrinth_id
+		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+		minecraftVersions.addAll(publishVersions)
+	}
+}
